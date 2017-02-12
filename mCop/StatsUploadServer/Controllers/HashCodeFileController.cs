@@ -12,11 +12,10 @@ using System.Web.Http;
 
 namespace StatsUploadServer.Controllers
 {
-    public class UploadFileController : ApiController
+    public class HashCodeFileController : ApiController
     {
-
-
-        // POST api/uploadfile
+ 
+        // POST api/hashcodefile
         public UploadFileModel.Response Post([FromBody]UploadFileModel.Request value)
         {
 
@@ -32,7 +31,7 @@ namespace StatsUploadServer.Controllers
                 else
                 {
                     //windows ไม่ให้สร้าง folder ที่มีเครื่องหมาย :
-                    value.device_mac= value.device_mac.Replace(":", "-");
+                    value.device_mac = value.device_mac.Replace(":", "-");
                     if (string.IsNullOrEmpty(value.device_mac))
                     {
                         var IP = ((HttpContextBase)Request.Properties["MS_HttpContext"]).Request.UserHostAddress;
@@ -49,7 +48,7 @@ namespace StatsUploadServer.Controllers
                     }
                     else
                     {
-                        string filename = value.device_mac + "_stats" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".txt";
+                        string filename = value.device_mac + "_hashcode" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".txt";
                         SaveFile(value.file, value, filename);
                         Response.IsCompleted = 1;
                         Response.Message = "Upload File สำเร็จ";
@@ -64,7 +63,7 @@ namespace StatsUploadServer.Controllers
             }
             return Response;
         }
-        protected void SaveFile(byte[] Data,UploadFileModel.Request value,string file)
+        protected void SaveFile(byte[] Data, UploadFileModel.Request value, string file)
         {
             string Name = ConfigurationManager.AppSettings["Path_Stats"] + value.device_mac;
             if (!Directory.Exists(Name))
@@ -75,8 +74,8 @@ namespace StatsUploadServer.Controllers
             File.WriteAllBytes(filename, Data);
             FileDBManager obj_FileDBManager = new FileDBManager();
             var IP = ((HttpContextBase)Request.Properties["MS_HttpContext"]).Request.UserHostAddress;
-            obj_FileDBManager.insertFile(value.device_mac, filename, value.os_version, value.device_model, IP, "stats");
-            Logger.writeLog("IP : " + IP + "  Upload File stats สำเร็จ " + "\n");
+            obj_FileDBManager.insertFile(value.device_mac, filename, value.os_version, value.device_model, IP, "hashcode");
+            Logger.writeLog("IP : " + IP + "  Upload File hashcode สำเร็จ " + "\n");
         }
     }
 }

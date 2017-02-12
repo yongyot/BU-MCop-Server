@@ -22,9 +22,9 @@ namespace StatsUploadServer.Models
             da = new SqlDataAdapter();
         }
 
-        public bool insertFile(string device_mac, String fileName, string os_version, string device_model, string address)
+        public bool insertFile(string device_mac, String fileName, string os_version, string device_model, string address,string type)
         {
-            string query = @"insert into Files(device_mac,file_name, is_processed,os_version,device_model,address) values(@device_mac,@file_name, @is_processed,@os_version,@device_model,@address)";
+            string query = @"insert into Files(device_mac,file_name, is_processed,os_version,device_model,address,type) values(@device_mac,@file_name, @is_processed,@os_version,@device_model,@address,@type)";
             try
             {
                 da.InsertCommand = new SqlCommand(query, con);
@@ -34,6 +34,7 @@ namespace StatsUploadServer.Models
                 da.InsertCommand.Parameters.AddWithValue("@os_version", os_version);
                 da.InsertCommand.Parameters.AddWithValue("@device_model", device_model);
                 da.InsertCommand.Parameters.AddWithValue("@address", address);
+                da.InsertCommand.Parameters.AddWithValue("@type", type);
                 con.Open();
                 da.InsertCommand.ExecuteNonQuery();
                 con.Close();
